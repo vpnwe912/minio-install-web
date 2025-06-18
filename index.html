@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Download install.sh</title>
+  <style>
+    :root {
+      --main-bg: #f8fafc;
+      --card-bg: #fff;
+      --accent: #0066ff;
+      --accent-hover: #0044aa;
+      --border: #e5e7eb;
+      --radius: 18px;
+      --shadow: 0 6px 32px 0 rgba(22,38,50,.11);
+      --transition: .2s;
+    }
+    body {
+      background: var(--main-bg);
+      min-height: 100vh;
+      font-family: 'Inter', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      max-width: 410px;
+      width: 100%;
+      text-align: center;
+      animation: showup .7s cubic-bezier(.2,1.1,.21,1) both;
+    }
+    @keyframes showup {
+      from { opacity:0; transform:translateY(40px);}
+      to   { opacity:1; transform:none;}
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: .6rem;
+      font-weight: 800;
+      letter-spacing: -.01em;
+    }
+    .desc {
+      color: #505c6e;
+      font-size: 1.03rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.55;
+    }
+    .code-block {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: .7rem 1rem;
+      text-align: left;
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      overflow-x: auto;
+      user-select: all;
+      transition: box-shadow var(--transition);
+      border: 1px solid #e5e7eb;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 9px; right: 12px;
+      background: none;
+      border: none;
+      color: #8ca3bd;
+      font-size: 1.03em;
+      cursor: pointer;
+      padding: 0;
+      transition: color var(--transition);
+      z-index: 2;
+    }
+    .copy-btn:hover { color: var(--accent); }
+    .dl-btn {
+      margin-top: 1.1rem;
+      display: inline-block;
+      padding: .85rem 1.6rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 13px;
+      border: none;
+      box-shadow: 0 1px 9px 0 rgba(22,38,50,.13);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition), transform .15s;
+      outline: none;
+      letter-spacing: .02em;
+    }
+    .dl-btn:hover { background: var(--accent-hover); transform: scale(1.04);}
+    .footer {
+      margin-top: 2.2rem;
+      font-size: .97em;
+      color: #97a0b2;
+      letter-spacing: .03em;
+    }
+    @media (max-width:500px) {
+      .card { padding: 1.2rem 0.6rem 1.3rem 0.6rem; }
+      h1 { font-size: 1.3rem; }
+      .desc { font-size: .99rem;}
+    }
+  </style>
+</head>
+<body>
+    <div class="card">
+      <h1>Install server<br>MinIO S3 Storage</h1>
+      <div class="desc">
+        <b>Download and run the automatic installer for Linux.</b><br>
+        <span style="color:#506080;">Choose your preferred download method:</span>
+      </div>
+      <div class="code-block" id="wget-block">
+        <button class="copy-btn" onclick="copyCode('wget-block')">📋</button>
+        wget https://<span class="domain">yourdomain.example.com</span>/install.sh -O install.sh && bash install.sh
+      </div>
+      <div class="code-block" id="curl-block">
+        <button class="copy-btn" onclick="copyCode('curl-block')">📋</button>
+        curl -fsSL https://<span class="domain">yourdomain.example.com</span>/install.sh | bash
+      </div>
+      <a class="dl-btn" id="dl-btn" href="install.sh" download>⬇ Download install.sh</a>
+      <div class="footer">
+        &copy; 2025 MinIO S3 Storage &mdash; Powered by MuPoBoU<br>
+      </div>
+    </div>
+    <script>
+      // Подстановка домена
+      const domain = location.host;
+      document.querySelectorAll('.domain').forEach(el => el.textContent = domain);
+  
+      // Если надо использовать https (или http), можно:
+      const protocol = location.protocol;
+      // Если файл не в корне, поменяй путь!
+      document.getElementById('dl-btn').href = protocol + '//' + domain + '/install.sh';
+  
+      // Функция копирования кода
+      function copyCode(id) {
+        const block = document.getElementById(id);
+        // убираем HTML-теги (оставляем только реальную команду)
+        let text = block.innerText.trim();
+        navigator.clipboard.writeText(text);
+        block.querySelector('.copy-btn').textContent = "✅";
+        setTimeout(()=>{ block.querySelector('.copy-btn').textContent = "📋"; }, 1200);
+      }
+    </script>
+  </body>
+  </html>
