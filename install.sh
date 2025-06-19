@@ -119,13 +119,23 @@ minio_client_settings() {
     done
 }
 
+input_domain() {
+    while true; do
+        DOMAIN=$(dialog --ascii-lines --inputbox "Enter domain for nginx (e.g. example.com):" 8 50 "${DOMAIN:-example.com}" 3>&1 1>&2 2>&3)
+        ret=$?
+        clear
+        if [ $ret -eq 1 ]; then confirm_exit || continue; fi
+        [ -n "$DOMAIN" ] && break
+    done
+}
+
 # === Диалоговые мастеры ===
 db_settings
 project_settings
 github_settings
 minio_server_settings
 minio_client_settings
-
+input_domain
 LOGFILE="/tmp/minio_install_error.log"
 rm -f "$LOGFILE"
 
@@ -214,8 +224,8 @@ EOF2
 run_step 85 "Installing MinIO Client" bash -c "if [ \"$MC_INSTALL_TYPE\" = \"1\" ]; then wget -O /tmp/mc https://dl.min.io/client/mc/release/linux-amd64/mc; sudo cp /tmp/mc /usr/local/bin/mc; else sudo cp /var/www/web-minio/downloads/minio-client-debian/mc /usr/local/bin/mc; fi; sudo chmod +x /usr/local/bin/mc"
 run_step 87 "Configuring mc alias" mc alias set $MINIO_ALIAS $MINIO_HOST $MINIO_KEY $MINIO_SECRET
 run_step 90 "Configuring nginx" bash -c '
-DOMAIN="web-minio.gepur.org";
-PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+
+PROJECT_PATH="/var/www/web-minio"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN";
 sudo tee $NGINX_CONF > /dev/null <<EOF2
 server {
