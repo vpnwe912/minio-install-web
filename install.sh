@@ -250,7 +250,8 @@ server {
 }
 EOF2
 sudo rm -f /etc/nginx/sites-enabled/$DOMAIN
-sudo ln -sf \$NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN; sudo nginx -t && sudo systemctl reload nginx
+sudo ln -sf \$NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN
+sudo nginx -t && sudo systemctl reload nginx
 "
 
 run_step 95 "Writing .env variables" bash -c '
