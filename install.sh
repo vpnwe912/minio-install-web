@@ -17,16 +17,16 @@ HEIGHT=15
 WIDTH=70
 
 confirm_exit() {
-    dialog --ascii-lines --yesno "Выйти из установки?" 8 50
+    dialog --ascii-lines --yesno "Exit from installation?" 8 50
     case $? in
-        0) clear; echo "Установка отменена."; exit 1;;
+        0) clear; echo "Installation canceled."; exit 1;;
         1) return 1;;
     esac
 }
 
 db_settings() {
     while true; do
-        result=$(dialog --ascii-lines --form "Параметры базы данных:" 15 70 3 \
+        result=$(dialog --ascii-lines --form "Database parameters:" 15 70 3 \
             "DB_NAME:"     1 1 "${DB_NAME:-minio_manager}"   1 30 30 100 \
             "DB_USER:"     2 1 "${DB_USER:-minio_user}"      2 30 30 100 \
             "DB_PASS:"     3 1 "${DB_PASS:-minio_pass}"      3 30 30 100 \
@@ -43,7 +43,7 @@ db_settings() {
 
 project_settings() {
     while true; do
-        result=$(dialog --ascii-lines --form "Параметры проекта:" 15 70 3 \
+        result=$(dialog --ascii-lines --form "Project parameters:" 15 70 3 \
             "APP_NAME:"    1 1 "${APP_NAME:-MinIO S3 Storage}"     1 30 30 100 \
             "APP_SHORT:"   2 1 "${APP_SHORT:-MinIO S3}"            2 30 30 100 \
             "ADMIN_EMAIL:" 3 1 "${ADMIN_EMAIL:-admin@example.com}" 3 30 30 100 \
@@ -60,7 +60,7 @@ project_settings() {
 
 github_settings() {
     while true; do
-        result=$(dialog --ascii-lines --form "Данные GitHub:" 15 70 4 \
+        result=$(dialog --ascii-lines --form "GitHub data:" 15 70 4 \
             "GITHUB_USER:" 1 1 "${GITHUB_USER:-vpnwe912}"           1 30 30 100 \
             "GITHUB_REPO:" 2 1 "${GITHUB_REPO:-nas_minio_s3_storage}" 2 30 30 100 \
             "GITHUB_TAG:"  3 1 "${GITHUB_TAG:-v1.0.0}"               3 30 30 100 \
@@ -79,8 +79,8 @@ github_settings() {
 
 minio_server_settings() {
     while true; do
-        result=$(dialog --ascii-lines --form "Параметры MinIO Server:" 20 70 5 \
-            "INSTALL_TYPE (1=официально/2=локально):" 1 1 "${INSTALL_TYPE:-2}"        1 40 20 100 \
+        result=$(dialog --ascii-lines --form "MinIO Server parameters:" 20 70 5 \
+            "INSTALL_TYPE (1=official/2=local):" 1 1 "${INSTALL_TYPE:-2}"        1 40 20 100 \
             "MINIO_USER:"       2 1 "${MINIO_USER:-minio-user}"            2 40 20 100 \
             "MINIO_DIR:"        3 1 "${MINIO_DIR:-/data}"                  3 40 20 100 \
             "MINIO_ADMIN_USER:" 4 1 "${MINIO_ADMIN_USER:-minioadmin}"      4 40 20 100 \
@@ -100,8 +100,8 @@ minio_server_settings() {
 
 minio_client_settings() {
     while true; do
-        result=$(dialog --ascii-lines --form "Параметры MinIO Client:" 20 70 5 \
-            "MC_INSTALL_TYPE (1=официально/2=локально):" 1 1 "${MC_INSTALL_TYPE:-1}" 1 40 20 100 \
+        result=$(dialog --ascii-lines --form "MinIO Client parameters:" 20 70 5 \
+            "MC_INSTALL_TYPE (1=official/2=local):" 1 1 "${MC_INSTALL_TYPE:-1}" 1 40 20 100 \
             "MINIO_HOST:"        2 1 "${MINIO_HOST:-http://127.0.0.1:9000}"   2 40 30 100 \
             "MINIO_KEY:"         3 1 "${MINIO_KEY:-minioadmin}"               3 40 20 100 \
             "MINIO_SECRET:"      4 1 "${MINIO_SECRET:-minioadminpassword}"    4 40 20 100 \
