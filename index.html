@@ -1,35 +1,23 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Install server MinIO S3 Storage</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Download install.sh</title>
   <style>
-    :root {
-      --main-bg: #f8fafc;
-      --card-bg: #fff;
-      --accent: #0066ff;
-      --accent-hover: #0044aa;
-      --border: #e5e7eb;
-      --radius: 18px;
-      --shadow: 0 6px 32px 0 rgba(22,38,50,.11);
-      --transition: .2s;
-    }
     body {
-      background: var(--main-bg);
+      background: #f7fafd;
       min-height: 100vh;
       font-family: 'Inter', Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
     .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 2.5rem 2.5rem 2rem 2.5rem;
-      max-width: 410px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(22,38,50,.13);
+      border: 1px solid #e5e7eb;
+      padding: 2.5rem 2.2rem 2.1rem 2.2rem;
+      max-width: 460px;
       width: 100%;
       text-align: center;
       animation: showup .7s cubic-bezier(.2,1.1,.21,1) both;
@@ -39,135 +27,137 @@
       to   { opacity:1; transform:none;}
     }
     h1 {
-      font-size: 2rem;
-      color: var(--accent);
-      margin-bottom: .6rem;
-      font-weight: 800;
+      font-size: 2.1rem;
+      color: #0066ff;
+      margin-bottom: .7rem;
+      font-weight: 900;
       letter-spacing: -.01em;
     }
     .desc {
-      color: #505c6e;
-      font-size: 1.03rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.55;
+      color: #495869;
+      font-size: 1.09rem;
+      margin-bottom: 1.6rem;
+      line-height: 1.54;
     }
-    .code-block {
-      background: #f1f5f9;
-      border-radius: 10px;
-      padding: .7rem 1rem;
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 0.2em;
+      margin-top: 1.2em;
+      font-size: 1.02rem;
+      color: #0066ff;
+      letter-spacing: .02em;
       text-align: left;
-      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
-      font-size: 1rem;
-      margin-bottom: 1.2rem;
+    }
+    .code-block-wrap {
       position: relative;
-      overflow-x: auto;
-      user-select: all;
-      transition: box-shadow var(--transition);
-      border: 1px solid #e5e7eb;
+      margin-bottom: 1.1rem;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
     }
     .copy-btn {
-      position: absolute;
-      top: 9px; right: 12px;
-      background: none;
-      border: none;
-      color: #8ca3bd;
-      font-size: 1.03em;
+      margin-left: 0.5em;
+      margin-top: 0.1em;
+      flex-shrink: 0;
+      background: #f5f8ff;
+      border: 1px solid #e0e7ef;
+      border-radius: 6px;
+      color: #3385ff;
+      font-size: 1.18em;
       cursor: pointer;
-      padding: 0;
-      transition: color var(--transition);
-      z-index: 2;
-    }
-    .copy-btn:hover { color: var(--accent); }
-    .dl-btn {
-      margin-top: 1.1rem;
-      display: inline-block;
-      padding: .85rem 1.6rem;
-      font-size: 1.1rem;
+      padding: 4px 11px;
+      transition: background .15s;
       font-weight: 600;
-      background: var(--accent);
+      outline: none;
+    }
+    .copy-btn:hover { background: #e5edfa; color: #0044aa;}
+    pre.code-block {
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 0.94em 1.2em;
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.06rem;
+      border: 1px solid #e5e7eb;
+      margin: 0;
+      width: 100%;
+      overflow-x: auto;
+      user-select: text;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      box-sizing: border-box;
+    }
+    .dl-btn {
+      margin-top: 1.25rem;
+      display: inline-block;
+      padding: .90rem 1.7rem;
+      font-size: 1.13rem;
+      font-weight: 700;
+      background: #0066ff;
       color: #fff;
-      border-radius: 13px;
+      border-radius: 14px;
       border: none;
-      box-shadow: 0 1px 9px 0 rgba(22,38,50,.13);
+      box-shadow: 0 1px 12px 0 rgba(22,38,50,.13);
       cursor: pointer;
       text-decoration: none;
-      transition: background var(--transition), transform .15s;
-      outline: none;
       letter-spacing: .02em;
+      transition: background .19s, transform .13s;
     }
-    .dl-btn:hover { background: var(--accent-hover); transform: scale(1.04);}
+    .dl-btn:hover { background: #0044aa; transform: scale(1.04);}
     .footer {
-      margin-top: 2.2rem;
-      font-size: .97em;
-      color: #97a0b2;
-      letter-spacing: .03em;
+      margin-top: 2.3rem;
+      font-size: 1em;
+      color: #b2b9c5;
+      letter-spacing: .02em;
+      line-height: 1.3;
     }
-    @media (max-width:500px) {
-      .card { padding: 1.2rem 0.6rem 1.3rem 0.6rem; }
-      h1 { font-size: 1.3rem; }
-      .desc { font-size: .99rem;}
+    @media (max-width:550px) {
+      .card { padding: 1.3rem .3rem 1.2rem .3rem; }
+      h1 { font-size: 1.21rem; }
+      .desc { font-size: 0.98rem;}
+      .footer { font-size: .88em;}
+      pre.code-block { font-size: .97em; padding: .7em .6em; }
     }
   </style>
 </head>
 <body>
-    <div class="card">
-      <h1>Install server<br>MinIO S3 Storage</h1>
-      <div class="desc">
-        <b>Download and run the automatic installer for Linux.</b><br>
-        <span style="color:#506080;">Choose your preferred download method:</span>
-      </div>
-      <div class="code-block" id="wget-block" data-command="">
-
-        <div class="code-block-wrap">
-            <button class="copy-btn" onclick="copyCode('wget')">📋</button>
-            <pre class="code-block" id="wget">
-                wget https://minio-install.gepur.org/install.sh -O install.sh
-                chmod +x install.sh
-                ./install.sh
-            </pre>
-        </div>
-        <div class="code-block-wrap">
-            <button class="copy-btn" onclick="copyCode('curl')">📋</button>
-            <pre class="code-block" id="curl">
-                curl -fsSL https://minio-install.gepur.org/install.sh -o install.sh
-                chmod +x install.sh
-                ./install.sh
-            </pre>
-        </div> 
-
-
-      <a class="dl-btn" id="dl-btn" href="install.sh" download>⬇ Download install.sh</a>
-      <div class="footer">
-        &copy; 2025 MinIO S3 Storage &mdash; Powered by MuPoBoU<br>
-      </div>
+  <div class="card">
+    <h1>Install server<br>MinIO S3 Storage</h1>
+    <div class="desc">
+      <b>Download and run the automatic installer for Linux.</b><br>
+      Choose your preferred download method:
     </div>
-    <script>
-        // Получаем протокол и хост
-        const domain = location.host;
-        const protocol = location.protocol;
-      
-        // Обновляем все .domain
-        document.querySelectorAll('.domain').forEach(el => el.textContent = domain);
-      
-        // Прописываем правильную ссылку для кнопки скачать
-        document.getElementById('dl-btn').href = protocol + '//' + domain + '/install.sh';
-      
-        // Массив команд для копирования (здесь можно менять шаблон)
-        const wgetCmd = `wget https://${domain}/install.sh -O install.sh && bash install.sh`;
-        const curlCmd = `curl -fsSL https://${domain}/install.sh | bash`;
-      
-        // Сохраняем команду для копирования в data-command
-        document.getElementById('wget-block').dataset.command = wgetCmd;
-        document.getElementById('curl-block').dataset.command = curlCmd;
-      
-        // Копирование по нажатию кнопки
-        function copyCode(id) {
-        const code = document.getElementById(id).innerText.trim();
-        navigator.clipboard.writeText(code);
-        const btn = document.querySelector(`[onclick="copyCode('${id}')"]`);
-        btn.textContent = "✅";
-        setTimeout(()=>{ btn.textContent = "📋"; }, 1200);
-        }
-      </script>
-  </body>
-  </html>
+    
+    <div class="method-title">Method 1 (wget):</div>
+    <div class="code-block-wrap">
+      <pre class="code-block" id="wget-cmd">wget https://minio-install.gepur.org/install.sh -O install.sh
+chmod +x install.sh
+./install.sh
+</pre>
+      <button class="copy-btn" onclick="copyCode('wget-cmd', this)" title="Copy to clipboard">📋</button>
+    </div>
+
+    <div class="method-title">Method 2 (curl):</div>
+    <div class="code-block-wrap">
+      <pre class="code-block" id="curl-cmd">curl -fsSL https://minio-install.gepur.org/install.sh | bash
+</pre>
+      <button class="copy-btn" onclick="copyCode('curl-cmd', this)" title="Copy to clipboard">📋</button>
+    </div>
+
+    <a class="dl-btn" href="install.sh" download>⬇ Download install.sh</a>
+    <div class="footer">
+      &copy; 2025 MinIO S3 Storage &mdash; Powered by MuPoBoU
+    </div>
+  </div>
+  <script>
+    function copyCode(blockId, btn) {
+      let text = document.getElementById(blockId).innerText;
+      // Удаляем лишние пробелы в начале/конце
+      text = text.replace(/^\s+|\s+$/g, '');
+      // Копируем
+      navigator.clipboard.writeText(text);
+      btn.textContent = "✅";
+      setTimeout(()=>{ btn.textContent = "📋"; }, 1200);
+    }
+  </script>
+</body>
+</html>
