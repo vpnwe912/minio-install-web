@@ -248,7 +248,7 @@ server {
 EOF2
 sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN; sudo nginx -t && sudo systemctl reload nginx
 '
-run_step 95 "Setting up Let's Encrypt certificate" sudo certbot --nginx -d web-minio.gepur.org --non-interactive --agree-tos -m admin@web-minio.gepur.org
+run_step 95 "Setting up Let's Encrypt certificate" sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "admin@$DOMAIN"
 
 run_step 98 "Writing .env variables" bash -c '
 ENV_FILE="/var/www/web-minio/.env";
