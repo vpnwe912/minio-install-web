@@ -248,9 +248,8 @@ server {
 EOF2
 sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN; sudo nginx -t && sudo systemctl reload nginx
 '
-run_step 95 "Setting up Let's Encrypt certificate" sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "admin@$DOMAIN"
 
-run_step 98 "Writing .env variables" bash -c '
+run_step 95 "Writing .env variables" bash -c '
 ENV_FILE="/var/www/web-minio/.env";
 set_env_var() {
     VAR_NAME="$1"
@@ -279,6 +278,7 @@ set_env_var "MINIO_KEY" "$MINIO_KEY"
 set_env_var "MINIO_SECRET" "$MINIO_SECRET"
 set_env_var "MINIO_ALIAS" "$MINIO_ALIAS"
 '
+run_step 98 "Setting up Let's Encrypt certificate" sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "admin@$DOMAIN"
 
 dialog --ascii-lines --msgbox "✅ Installation completed successfully!" 10 40
 clear
