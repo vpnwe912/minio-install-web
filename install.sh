@@ -227,42 +227,39 @@ EOF2
 run_step 85 "Installing MinIO Client" bash -c "if [ \"$MC_INSTALL_TYPE\" = \"1\" ]; then wget -O /tmp/mc https://dl.min.io/client/mc/release/linux-amd64/mc; sudo cp /tmp/mc /usr/local/bin/mc; else sudo cp /var/www/web-minio/downloads/minio-client-debian/mc /usr/local/bin/mc; fi; sudo chmod +x /usr/local/bin/mc"
 run_step 87 "Configuring mc alias" mc alias set "$MINIO_ALIAS" "$MINIO_HOST" "$MINIO_KEY" "$MINIO_SECRET"
 
-PROJECT_PATH=/var/www/web-minio
+PROJECT_PATH="/var/www/web-minio"
 run_step 90 "Configuring nginx" bash -c "
-
-NGINX_CONF=\"/etc/nginx/sites-available/$DOMAIN\";
-sudo tee \$NGINX_CONF > /dev/null <<EOF2
+NGINX_CONF="/etc/nginx/sites-available/$DOMAIN"
+sudo tee $NGINX_CONF > /dev/null <<'EOF'
 server {
     listen 80;
-    server_name $DOMAIN;
+    server_name '"$DOMAIN"';
     client_max_body_size 200M;
 
-    root $PROJECT_PATH/web;
+    root '"$PROJECT_PATH"'/web;
     index index.php index.html;
 
-    access_log /var/log/nginx/${DOMAIN}_access.log;
-    error_log  /var/log/nginx/${DOMAIN}_error.log;
+    access_log /var/log/nginx/'"$DOMAIN"'_access.log;
+    error_log  /var/log/nginx/'"$DOMAIN"'_error.log;
 
-    location / { 
-        try_files \$uri \$uri/ /index.php\$is_args\$args; 
-    }   
-    location ~ \.php\$ {
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+    location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)\$ {
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
         expires max;
         log_not_found off;
     }
-
     location ~ /\.ht {
         deny all;
     }
 }
-EOF2
+EOF
 sudo rm -f /etc/nginx/sites-enabled/$DOMAIN
 sudo ln -sf \$NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN
 sudo nginx -t && sudo systemctl reload nginx
