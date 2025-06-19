@@ -144,11 +144,14 @@ run_step() {
     local desc="$2"
     shift 2
 
+    local STEP_LOG="/tmp/minio_install_error_${percent}.log"
+    rm -f "$STEP_LOG"
+
     (
         echo "$percent"
         echo "# $desc"
         sleep 0.2
-        "$@" >>"$LOGFILE" 2>&1
+        "$@" >>"$STEP_LOG" 2>&1
         local exit_code=$?
         if [ $exit_code -ne 0 ]; then
             echo "100"
@@ -162,7 +165,7 @@ run_step() {
 
     local run_status=${PIPESTATUS[0]}
     if [ $run_status -ne 0 ]; then
-        dialog --ascii-lines --msgbox "Error at stage: $desc\n\n$(tail -40 "$LOGFILE")" 20 80
+        dialog --ascii-lines --msgbox "Error at stage: $desc\n\n$(tail -40 "$STEP_LOG")" 20 80
         clear
         echo -e "\e[31m Installation aborted!\e[0m"
         exit 1
