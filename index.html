@@ -117,17 +117,25 @@
         <span style="color:#506080;">Choose your preferred download method:</span>
       </div>
       <div class="code-block" id="wget-block" data-command="">
-        <button class="copy-btn" onclick="copyCode(this)">📋</button>
-        <span class="command">
-          wget https://<span class="domain">yourdomain.example.com</span>/install.sh -O install.sh && bash install.sh
-        </span>
-      </div>
-      <div class="code-block" id="curl-block" data-command="">
-        <button class="copy-btn" onclick="copyCode(this)">📋</button>
-        <span class="command">
-          curl -fsSL https://<span class="domain">yourdomain.example.com</span>/install.sh | bash
-        </span>
-      </div>      
+
+        <div class="code-block-wrap">
+            <button class="copy-btn" onclick="copyCode('wget')">📋</button>
+            <pre class="code-block" id="wget">
+                wget https://minio-install.gepur.org/install.sh -O install.sh
+                chmod +x install.sh
+                ./install.sh
+            </pre>
+        </div>
+        <div class="code-block-wrap">
+            <button class="copy-btn" onclick="copyCode('curl')">📋</button>
+            <pre class="code-block" id="curl">
+                curl -fsSL https://minio-install.gepur.org/install.sh -o install.sh
+                chmod +x install.sh
+                ./install.sh
+            </pre>
+        </div> 
+
+
       <a class="dl-btn" id="dl-btn" href="install.sh" download>⬇ Download install.sh</a>
       <div class="footer">
         &copy; 2025 MinIO S3 Storage &mdash; Powered by MuPoBoU<br>
@@ -153,12 +161,12 @@
         document.getElementById('curl-block').dataset.command = curlCmd;
       
         // Копирование по нажатию кнопки
-        function copyCode(btn) {
-          const block = btn.parentElement;
-          const code = block.dataset.command;
-          navigator.clipboard.writeText(code);
-          btn.textContent = "✅";
-          setTimeout(() => { btn.textContent = "📋"; }, 1200);
+        function copyCode(id) {
+        const code = document.getElementById(id).innerText.trim();
+        navigator.clipboard.writeText(code);
+        const btn = document.querySelector(`[onclick="copyCode('${id}')"]`);
+        btn.textContent = "✅";
+        setTimeout(()=>{ btn.textContent = "📋"; }, 1200);
         }
       </script>
   </body>

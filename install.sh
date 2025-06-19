@@ -245,7 +245,7 @@ if [ "$MC_INSTALL_TYPE" = "1" ]; then
     sudo cp /tmp/mc /usr/local/bin/mc
 elif [ "$MC_INSTALL_TYPE" = "2" ]; then
     echo "Копирование MinIO Client из проекта..."
-    sudo cp /var/www/web-minio/download/minio-client-debian/mc /usr/local/bin/mc
+    sudo cp /var/www/web-minio/downloads/minio-client-debian/mc /usr/local/bin/mc
 else
     echo "Неверный выбор, установка прервана."
     exit 1
