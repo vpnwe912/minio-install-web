@@ -235,12 +235,13 @@ sudo tee \$NGINX_CONF > /dev/null <<EOF2
 server {
     listen 80;
     server_name $DOMAIN;
+    client_max_body_size 200M;
     root $PROJECT_PATH/web;
     index index.php index.html;
     access_log /var/log/nginx/${DOMAIN}_access.log;
     error_log  /var/log/nginx/${DOMAIN}_error.log;
     location / { 
-        try_files \$uri \$uri/ /index.php?\$args; 
+        try_files \$uri \$uri/ /index.php\$is_args\$args; 
     }   
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
