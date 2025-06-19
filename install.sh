@@ -168,7 +168,7 @@ if [ "$INSTALL_TYPE" = "1" ]; then
     sudo cp /tmp/minio /usr/local/bin/minio
 elif [ "$INSTALL_TYPE" = "2" ]; then
     echo "Copying MinIO from project..."
-    sudo cp /var/www/web-minio/download/minio-server-debian/minio /usr/local/bin/minio
+    sudo cp /var/www/web-minio/downloads/minio-server-debian/minio /usr/local/bin/minio
 else
     echo "Invalid selection, installation aborted."
     exit 1
