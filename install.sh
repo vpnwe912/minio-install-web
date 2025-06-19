@@ -112,6 +112,9 @@ read -p "Введите GITHUB_TOKEN (можно оставить пустым):
 set_env_var() {
     VAR_NAME="$1"
     VAR_VALUE="$2"
+    if [[ "$VAR_VALUE" =~ [[:space:]] ]]; then
+        VAR_VALUE="\"$VAR_VALUE\""
+    fi
     if grep -q "^${VAR_NAME}=" "$ENV_FILE"; then
         sed -i "s|^${VAR_NAME}=.*|${VAR_NAME}=${VAR_VALUE}|" "$ENV_FILE"
     else
