@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <title>MinIO S3 Storage Installation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -17,13 +19,17 @@
       --success: #38a169;
       --error: #e53e3e;
     }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    html[data-theme='dark'] {
+      --primary: #4890ff;
+      --primary-hover: #196dc7;
+      --text: #f7fafc;
+      --text-light: #b7bed7;
+      --bg: #151924;
+      --card-bg: #232c3a;
+      --border: #2e3648;
+      --success: #65b66a;
+      --error: #e57373;
     }
-    
     body {
       background: var(--bg);
       min-height: 100vh;
@@ -35,7 +41,6 @@
       color: var(--text);
       line-height: 1.5;
     }
-    
     .card {
       background: var(--card-bg);
       border-radius: 16px;
@@ -46,13 +51,12 @@
       width: 100%;
       text-align: center;
       animation: fadeIn 0.5s ease-out;
+      position: relative;
     }
-    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
     h1 {
       font-size: 2rem;
       color: var(--primary);
@@ -60,23 +64,19 @@
       font-weight: 700;
       line-height: 1.2;
     }
-    
     .desc {
       color: var(--text-light);
       font-size: 1.1rem;
       margin-bottom: 2rem;
       line-height: 1.6;
     }
-    
     .install-methods {
       text-align: left;
-      margin: 2rem 0;
+      margin: 2rem 0 0.5rem 0;
     }
-    
     .method {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2.1rem;
     }
-    
     .method-title {
       font-weight: 600;
       margin-bottom: 0.75rem;
@@ -86,72 +86,50 @@
       align-items: center;
       gap: 8px;
     }
-    
-    .method-title svg {
-      width: 20px;
-      height: 20px;
-    }
-    
     .code-block-wrap {
       position: relative;
-      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.9rem;
+    }
+    pre.code-block {
       background: #f8fafc;
       border-radius: 8px;
       border: 1px solid var(--border);
-      overflow: hidden;
-    }
-    
-    pre.code-block {
       margin: 0;
-      padding: 1rem;
+      padding: 1.08rem 1.12rem;
       font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.95rem;
+      font-size: 0.97rem;
       color: #1e293b;
       overflow-x: auto;
       white-space: pre-wrap;
       line-height: 1.6;
       user-select: text;
+      flex: 1 1 auto;
+      min-width: 0;
     }
-    
-    .code-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 0.5rem 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .code-tab {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-light);
-    }
-    
     .copy-btn {
-      background: transparent;
-      border: none;
-      color: #64748b;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.25rem 0.75rem;
-      border-radius: 4px;
+      margin-left: 8px;
+      margin-top: 6px;
+      flex-shrink: 0;
+      background: #f5f8ff;
+      border: 1px solid #e0e7ef;
+      border-radius: 6px;
+      color: #3385ff;
+      font-size: 1.14em;
       cursor: pointer;
+      padding: 5px 13px;
+      transition: background .15s, color .15s;
+      font-weight: 600;
+      outline: none;
+      position: relative;
+      z-index: 2;
       display: flex;
       align-items: center;
-      gap: 4px;
-      transition: all 0.2s;
+      gap: 6px;
     }
-    
-    .copy-btn:hover {
-      background: #e2e8f0;
-      color: var(--text);
-    }
-    
-    .copy-btn.copied {
-      color: var(--success);
-    }
-    
+    .copy-btn.copied { color: var(--success);}
+    .copy-btn:hover { background: #e5edfa; color: #0044aa;}
     .btn {
       display: inline-flex;
       align-items: center;
@@ -169,205 +147,163 @@
       transition: all 0.2s;
       margin-top: 1rem;
     }
-    
     .btn:hover {
       background: var(--primary-hover);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
     }
-    
     .btn svg {
       width: 18px;
       height: 18px;
     }
-    
     .footer {
       margin-top: 2.5rem;
       font-size: 0.9rem;
       color: #94a3b8;
       line-height: 1.5;
     }
-    
-    .status-message {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      display: none;
-    }
-    
-    .status-message.success {
-      background: #f0fff4;
-      color: var(--success);
-      border: 1px solid #c6f6d5;
-      display: block;
-    }
-    
-    .status-message.error {
-      background: #fff5f5;
-      color: var(--error);
-      border: 1px solid #fed7d7;
-      display: block;
-    }
-    
     @media (max-width: 600px) {
       .card {
         padding: 1.75rem 1.25rem;
       }
-      
       h1 {
         font-size: 1.75rem;
       }
-      
       .desc {
         font-size: 1rem;
       }
-      
       pre.code-block {
         font-size: 0.85rem;
-        padding: 0.75rem;
+        padding: 0.7rem 0.6rem;
       }
-      
-      .btn {
-        width: 100%;
-        padding: 0.9rem;
-      }
+      .btn { width: 100%; padding: 0.9rem; }
+      .copy-btn { padding: 5px 8px;}
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>MinIO S3 Storage Installation</h1>
-    <div class="desc">
+  <div class="card animate__animated animate__fadeInUp">
+    <h1 data-i18n="title">MinIO S3 Storage Installation</h1>
+    <div class="desc" data-i18n="desc">
       Get started with MinIO S3 Storage on your Linux server.
       Choose your preferred installation method below:
     </div>
-    
+
     <div class="install-methods">
       <div class="method">
-        <h3 class="method-title">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-          </svg>
-          Method 1: Using wget
-        </h3>
+        <div class="method-title"><i class="fas fa-terminal"></i><span data-i18n="method1">Method 1: Using wget</span></div>
         <div class="code-block-wrap">
-          <div class="code-header">
-            <span class="code-tab">Terminal</span>
-            <button class="copy-btn" data-target="wget-cmd">
-              <span class="copy-icon">📋</span>
-              <span class="copy-text">Copy</span>
-            </button>
-          </div>
-          <pre class="code-block" id="wget-cmd">wget https://minio-install.consider.pp.ua/install.sh -O install.sh \
-  && chmod +x install.sh \
-  && sudo ./install.sh</pre>
+          <pre class="code-block" id="wget-block">
+wget https://minio-install.gepur.org/install.sh -O install.sh
+chmod +x install.sh
+./install.sh
+</pre>
+          <button class="copy-btn" onclick="copyCode('wget-block', this)" title="Copy">
+            <i class="fas fa-copy"></i>
+          </button>
         </div>
       </div>
-
       <div class="method">
-        <h3 class="method-title">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-          </svg>
-          Method 2: Using curl
-        </h3>
+        <div class="method-title"><i class="fas fa-terminal"></i><span data-i18n="method2">Method 2: Using curl</span></div>
         <div class="code-block-wrap">
-          <div class="code-header">
-            <span class="code-tab">Terminal</span>
-            <button class="copy-btn" data-target="curl-cmd">
-              <span class="copy-icon">📋</span>
-              <span class="copy-text">Copy</span>
-            </button>
-          </div>
-          <pre class="code-block" id="curl-cmd">curl -fsSL https://minio-install.consider.pp.ua/install.sh | sudo bash</pre>
+          <pre class="code-block" id="curl-block">
+curl -fsSL https://minio-install.gepur.org/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
+</pre>
+          <button class="copy-btn" onclick="copyCode('curl-block', this)" title="Copy">
+            <i class="fas fa-copy"></i>
+          </button>
         </div>
       </div>
     </div>
-
-    <a href="install.sh" download class="btn" id="download-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-      </svg>
+    <a class="btn" id="download-btn" href="install.sh" download>
+      <i class="fas fa-download"></i>
       Download Install Script
     </a>
-
-    <div class="status-message" id="status-message"></div>
-
     <div class="footer">
       &copy; 2025 MinIO S3 Storage &mdash; Powered by MuPoBoU
     </div>
   </div>
-
+  <button id="theme-toggle" class="btn" style="position: absolute; top: 1rem; right: 1rem;">
+    <i class="fas fa-moon"></i>
+  </button>
+  <button id="lang-toggle" class="btn" style="position: absolute; top: 1rem; left: 1rem;">
+    <span>EN</span>
+  </button>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Copy to clipboard functionality
-      document.querySelectorAll('.copy-btn').forEach(button => {
-        button.addEventListener('click', function() {
-          const targetId = this.getAttribute('data-target');
-          const codeBlock = document.getElementById(targetId);
-          const textToCopy = codeBlock.textContent.trim();
-          
-          navigator.clipboard.writeText(textToCopy).then(() => {
-            // Show success feedback
-            const icon = this.querySelector('.copy-icon');
-            const text = this.querySelector('.copy-text');
-            const originalIcon = icon.textContent;
-            const originalText = text.textContent;
-            
-            icon.textContent = '✅';
-            text.textContent = 'Copied!';
-            this.classList.add('copied');
-            
-            setTimeout(() => {
-              icon.textContent = originalIcon;
-              text.textContent = originalText;
-              this.classList.remove('copied');
-            }, 2000);
-            
-            showStatus('Command copied to clipboard!', 'success');
-          }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            showStatus('Failed to copy command. Please try again.', 'error');
-          });
-        });
-      });
-
-      // Handle download button click
-      const downloadBtn = document.getElementById('download-btn');
-      if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
-          // Optional: Add analytics or tracking here
-          showStatus('Starting download...', 'success');
-        });
-      }
-
-      // Show status message
-      function showStatus(message, type) {
-        const statusEl = document.getElementById('status-message');
-        if (!statusEl) return;
-        
-        statusEl.textContent = message;
-        statusEl.className = 'status-message ' + (type || 'info');
-        
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-          statusEl.textContent = '';
-          statusEl.className = 'status-message';
-        }, 5000);
-      }
-
-      // Check if the script is accessible
-      fetch('install.sh', { method: 'HEAD' })
-        .then(response => {
-          if (!response.ok) {
-            showStatus('Warning: Install script might not be accessible', 'error');
-          }
-        })
-        .catch(() => {
-          showStatus('Warning: Unable to verify install script', 'error');
-        });
+    // Copy code logic
+    function copyCode(blockId, btn) {
+      let text = document.getElementById(blockId).innerText;
+      text = text.replace(/^\s+|\s+$/g, '');
+      navigator.clipboard.writeText(text);
+      const icon = btn.querySelector('i');
+      icon.className = 'fas fa-check';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        icon.className = 'fas fa-copy';
+        btn.classList.remove('copied');
+      }, 2500); // 2.5 секунды
+    }
+    // Theme switching
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+      document.body.classList.add('theme-transition');
+      setTimeout(() => document.body.classList.remove('theme-transition'), 300);
     });
+    function updateThemeIcon(theme) {
+      const icon = themeToggle.querySelector('i');
+      icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    // Language switcher
+    const langToggle = document.getElementById('lang-toggle');
+    let currentLang = 'en';
+    const translations = {
+      en: {
+        title: 'MinIO S3 Storage Installation',
+        desc: 'Get started with MinIO S3 Storage on your Linux server. Choose your preferred installation method below:',
+        method1: 'Method 1: Using wget',
+        method2: 'Method 2: Using curl',
+        download: 'Download Install Script',
+        copy: 'Copy',
+        copied: 'Copied!'
+      },
+      ru: {
+        title: 'Установка MinIO S3 Storage',
+        desc: 'Начните работу с MinIO S3 Storage на вашем Linux сервере. Выберите предпочитаемый способ установки:',
+        method1: 'Способ 1: Используя wget',
+        method2: 'Способ 2: Используя curl',
+        download: 'Скачать скрипт установки',
+        copy: 'Копировать',
+        copied: 'Скопировано!'
+      }
+    };
+    langToggle.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ru' : 'en';
+      updateLanguage(currentLang);
+      langToggle.querySelector('span').textContent = currentLang.toUpperCase();
+    });
+    function updateLanguage(lang) {
+      const t = translations[lang];
+      document.querySelector('h1').textContent = t.title;
+      document.querySelector('.desc').textContent = t.desc;
+      document.querySelectorAll('.method-title')[0].lastChild.textContent = t.method1;
+      document.querySelectorAll('.method-title')[1].lastChild.textContent = t.method2;
+      document.getElementById('download-btn').innerHTML = `<i class="fas fa-download"></i> ${t.download}`;
+      document.querySelectorAll('.copy-text').forEach(el => {
+        el.innerHTML = '<i class="fas fa-copy"></i> ' + t.copy;
+      });
+    }
   </script>
 </body>
 </html>
