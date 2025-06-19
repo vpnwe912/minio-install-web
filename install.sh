@@ -225,9 +225,10 @@ run_step 85 "Installing MinIO Client" bash -c "if [ \"$MC_INSTALL_TYPE\" = \"1\"
 run_step 87 "Configuring mc alias" mc alias set $MINIO_ALIAS $MINIO_HOST $MINIO_KEY $MINIO_SECRET
 run_step 90 "Configuring nginx" bash -c '
 
-PROJECT_PATH="/var/www/web-minio"
-NGINX_CONF="/etc/nginx/sites-available/$DOMAIN";
-sudo tee $NGINX_CONF > /dev/null <<EOF2
+run_step 90 "Configuring nginx" bash -c "
+PROJECT_PATH=\"/var/www/web-minio\"
+NGINX_CONF=\"/etc/nginx/sites-available/$DOMAIN\";
+sudo tee \$NGINX_CONF > /dev/null <<EOF2
 server {
     listen 80;
     server_name $DOMAIN;
@@ -246,8 +247,8 @@ server {
     location ~ /\.ht { deny all; }
 }
 EOF2
-sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN; sudo nginx -t && sudo systemctl reload nginx
-'
+sudo ln -sf \$NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN; sudo nginx -t && sudo systemctl reload nginx
+"
 
 run_step 95 "Writing .env variables" bash -c '
 ENV_FILE="/var/www/web-minio/.env";
