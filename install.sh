@@ -226,9 +226,10 @@ EOF2
 '
 run_step 85 "Installing MinIO Client" bash -c "if [ \"$MC_INSTALL_TYPE\" = \"1\" ]; then wget -O /tmp/mc https://dl.min.io/client/mc/release/linux-amd64/mc; sudo cp /tmp/mc /usr/local/bin/mc; else sudo cp /var/www/web-minio/downloads/minio-client-debian/mc /usr/local/bin/mc; fi; sudo chmod +x /usr/local/bin/mc"
 run_step 87 "Configuring mc alias" mc alias set "$MINIO_ALIAS" "$MINIO_HOST" "$MINIO_KEY" "$MINIO_SECRET"
+
+PROJECT_PATH=/var/www/web-minio
 run_step 90 "Configuring nginx" bash -c "
 
-PROJECT_PATH=\"/var/www/web-minio\"
 NGINX_CONF=\"/etc/nginx/sites-available/$DOMAIN\";
 sudo tee \$NGINX_CONF > /dev/null <<EOF2
 server {
@@ -238,7 +239,9 @@ server {
     index index.php index.html;
     access_log /var/log/nginx/${DOMAIN}_access.log;
     error_log  /var/log/nginx/${DOMAIN}_error.log;
-    location / { try_files \$uri \$uri/ /index.php?\$args; }
+    location / { 
+        try_files \$uri \$uri/ /index.php?\$args; 
+    }   
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
