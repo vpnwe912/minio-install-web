@@ -126,6 +126,39 @@ github_settings
 minio_server_settings
 minio_client_settings
 
+LOGFILE="/tmp/minio_install_error.log"
+rm -f "$LOGFILE"
+
+run_step() {
+    local percent="$1"
+    local desc="$2"
+    shift 2
+
+    (
+        echo "$percent"
+        echo "# $desc"
+        sleep 0.2
+        "$@" >>"$LOGFILE" 2>&1
+        local exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+            echo "100"
+            echo "# ❌ Error at stage: $desc"
+            exit $exit_code
+        fi
+        echo "100"
+        echo "# $desc - completed"
+        sleep 0.5
+    ) | dialog --ascii-lines --title "MinIO S3 Storage Installation" --gauge "$desc..." 10 70 0
+
+    local run_status=${PIPESTATUS[0]}
+    if [ $run_status -ne 0 ]; then
+        dialog --ascii-lines --msgbox "Error at stage: $desc\n\n$(tail -40 "$LOGFILE")" 20 80
+        clear
+        echo -e "\e[31m Installation aborted!\e[0m"
+        exit 1
+    fi
+}
+
 run_step 5  "System update" sudo apt update -y
 run_step 10 "Upgrading packages" sudo apt upgrade -y
 run_step 15 "Installing utilities" sudo apt install -y curl sudo git wget unzip software-properties-common lsb-release ca-certificates apt-transport-https
