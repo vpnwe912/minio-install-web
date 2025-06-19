@@ -116,13 +116,17 @@
         <b>Download and run the automatic installer for Linux.</b><br>
         <span style="color:#506080;">Choose your preferred download method:</span>
       </div>
-      <div class="code-block" id="wget-block">
-        <button class="copy-btn" onclick="copyCode('wget-block')">📋</button>
-        wget https://<span class="domain">yourdomain.example.com</span>/install.sh -O install.sh && bash install.sh
+      <div class="code-block" id="wget-block" data-command="">
+        <button class="copy-btn" onclick="copyCode(this)">📋</button>
+        <span class="command">
+          wget https://<span class="domain">yourdomain.example.com</span>/install.sh -O install.sh && bash install.sh
+        </span>
       </div>
-      <div class="code-block" id="curl-block">
-        <button class="copy-btn" onclick="copyCode('curl-block')">📋</button>
-        curl -fsSL https://<span class="domain">yourdomain.example.com</span>/install.sh | bash
+      <div class="code-block" id="curl-block" data-command="">
+        <button class="copy-btn" onclick="copyCode(this)">📋</button>
+        <span class="command">
+          curl -fsSL https://<span class="domain">yourdomain.example.com</span>/install.sh | bash
+        </span>
       </div>
       <a class="dl-btn" id="dl-btn" href="install.sh" download>⬇ Download install.sh</a>
       <div class="footer">
@@ -130,24 +134,32 @@
       </div>
     </div>
     <script>
-      // Подстановка домена
-      const domain = location.host;
-      document.querySelectorAll('.domain').forEach(el => el.textContent = domain);
-  
-      // Если надо использовать https (или http), можно:
-      const protocol = location.protocol;
-      // Если файл не в корне, поменяй путь!
-      document.getElementById('dl-btn').href = protocol + '//' + domain + '/install.sh';
-  
-      // Функция копирования кода
-      function copyCode(id) {
-        const block = document.getElementById(id);
-        // убираем HTML-теги (оставляем только реальную команду)
-        let text = block.innerText.trim();
-        navigator.clipboard.writeText(text);
-        block.querySelector('.copy-btn').textContent = "✅";
-        setTimeout(()=>{ block.querySelector('.copy-btn').textContent = "📋"; }, 1200);
-      }
-    </script>
+        // Получаем протокол и хост
+        const domain = location.host;
+        const protocol = location.protocol;
+      
+        // Обновляем все .domain
+        document.querySelectorAll('.domain').forEach(el => el.textContent = domain);
+      
+        // Прописываем правильную ссылку для кнопки скачать
+        document.getElementById('dl-btn').href = protocol + '//' + domain + '/install.sh';
+      
+        // Массив команд для копирования (здесь можно менять шаблон)
+        const wgetCmd = `wget https://${domain}/install.sh -O install.sh && bash install.sh`;
+        const curlCmd = `curl -fsSL https://${domain}/install.sh | bash`;
+      
+        // Сохраняем команду для копирования в data-command
+        document.getElementById('wget-block').dataset.command = wgetCmd;
+        document.getElementById('curl-block').dataset.command = curlCmd;
+      
+        // Копирование по нажатию кнопки
+        function copyCode(btn) {
+          const block = btn.parentElement;
+          const code = block.dataset.command;
+          navigator.clipboard.writeText(code);
+          btn.textContent = "✅";
+          setTimeout(() => { btn.textContent = "📋"; }, 1200);
+        }
+      </script>      
   </body>
   </html>
