@@ -236,10 +236,13 @@ server {
     listen 80;
     server_name $DOMAIN;
     client_max_body_size 200M;
+
     root $PROJECT_PATH/web;
     index index.php index.html;
+
     access_log /var/log/nginx/${DOMAIN}_access.log;
     error_log  /var/log/nginx/${DOMAIN}_error.log;
+
     location / { 
         try_files \$uri \$uri/ /index.php\$is_args\$args; 
     }   
@@ -249,8 +252,15 @@ server {
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)\$ { expires max; log_not_found off; }
-    location ~ /\.ht { deny all; }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)\$ {
+        expires max;
+        log_not_found off;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
 }
 EOF2
 sudo rm -f /etc/nginx/sites-enabled/$DOMAIN
