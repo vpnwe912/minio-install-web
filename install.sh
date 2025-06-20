@@ -229,29 +229,29 @@ run_step 87 "Configuring mc alias" mc alias set "$MINIO_ALIAS" "$MINIO_HOST" "$M
 
 PROJECT_PATH="/var/www/web-minio"
 run_step 90 "Configuring nginx" bash -c "
-NGINX_CONF="/etc/nginx/sites-available/$DOMAIN"
-sudo tee $NGINX_CONF > /dev/null <<'EOF'
+NGINX_CONF=\"/etc/nginx/sites-available/$DOMAIN\"
+sudo tee \$NGINX_CONF > /dev/null <<'EOF'
 server {
     listen 80;
-    server_name '"$DOMAIN"';
+    server_name $DOMAIN;
     client_max_body_size 200M;
 
-    root '"$PROJECT_PATH"'/web;
+    root $PROJECT_PATH/web;
     index index.php index.html;
 
-    access_log /var/log/nginx/'"$DOMAIN"'_access.log;
-    error_log  /var/log/nginx/'"$DOMAIN"'_error.log;
+    access_log /var/log/nginx/${DOMAIN}_access.log;
+    error_log  /var/log/nginx/${DOMAIN}_error.log;
 
     location / {
-        try_files $uri $uri/ /index.php$is_args$args;
+        try_files \$uri \$uri/ /index.php\$is_args\$args;
     }
-    location ~ \.php$ {
+    location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root $fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)\$ {
         expires max;
         log_not_found off;
     }
@@ -264,6 +264,21 @@ sudo rm -f /etc/nginx/sites-enabled/$DOMAIN
 sudo ln -sf \$NGINX_CONF /etc/nginx/sites-enabled/$DOMAIN
 sudo nginx -t && sudo systemctl reload nginx
 "
+
+export DB_NAME="$DB_NAME"
+export DB_USER="$DB_USER"
+export DB_PASS="$DB_PASS"
+export APP_NAME="$APP_NAME"
+export APP_SHORT="$APP_SHORT"
+export ADMIN_EMAIL="$ADMIN_EMAIL"
+export GITHUB_USER="$GITHUB_USER"
+export GITHUB_REPO="$GITHUB_REPO"
+export GITHUB_TAG="$GITHUB_TAG"
+export GITHUB_TOKEN="$GITHUB_TOKEN"
+export MINIO_HOST="$MINIO_HOST"
+export MINIO_KEY="$MINIO_KEY"
+export MINIO_SECRET="$MINIO_SECRET"
+export MINIO_ALIAS="$MINIO_ALIAS"
 
 run_step 95 "Writing .env variables" bash -c '
 ENV_FILE="/var/www/web-minio/.env";
